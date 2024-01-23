@@ -1,0 +1,37 @@
+Task 2
+
+SELECT users.username,users.name, posts.user_id, posts.title, posts.content
+FROM users
+JOIN posts ON users._id = posts.user_id;
+
+Task 3
+
+db.users.aggregate([
+    {
+        $lookup: {
+            from: "posts",
+            localField: "_id",
+            foreignField: "userId",
+            as: "posts"
+        }
+    },
+    {
+        $project: {
+            _id: 1,
+            username: 1,
+            name: 1,
+            posts: {
+                $cond: {
+                    if: { $isArray: "$posts" },
+                    then: "$posts",
+                    else: []
+                }
+            }
+        }
+    }
+])
+
+
+
+
+
